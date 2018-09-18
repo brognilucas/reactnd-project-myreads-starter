@@ -25,57 +25,39 @@ class BooksApp extends React.Component {
     wantToRead: [],
     read: [],
     currentlyReading: [],
-    finishLoader: true 
+    finishLoader: true
   }
 
   initialState = {
     wantToRead: [],
     read: [],
-    currentlyReading: []  
+    currentlyReading: []
   }
 
-  setStateWant = (book) => {
+  updateState = (book, shelf) => {
     this.setState((prev) => ({
-      wantToRead: [...prev.wantToRead, book]
+      [shelf]: [...prev[shelf], book]
     }))
+
   }
 
-  setStateCurrently = (book) => {
-    this.setState((prev) => ({
-      currentlyReading: [...prev.currentlyReading, book]
-    }))
-  }
-
-  setStateRead = (book) => {
-    this.setState((prev) => ({
-      read: [...prev.read, book]
-    }))
-  }
-
-  getBooks = () => {
-    this.setState( () => ({
-      finishLoader: false 
+  getBooks = async () => {
+    this.setState(() => ({
+      finishLoader: false
     }))
 
     this.setState(this.initialState)
-    BooksAPI.getAll()
-      .then(books => {
-        books.forEach(book => {
-          if (book.shelf === 'wantToRead') {
-            this.setStateWant(book)
-          }
-          else if (book.shelf === 'currentlyReading') {
-            this.setStateCurrently(book)
-          }
-          else {
-            this.setStateRead(book)
-          }
-          
-          this.setState( () => ({
-            finishLoader: true 
-          }))
-        });
-      })
+    let books = await BooksAPI.getAll()
+
+
+    books.forEach(book => {
+      this.updateState(book, book.shelf);
+    });
+
+
+    this.setState(() => ({
+      finishLoader: true
+    }))
   }
 
   render() {
@@ -85,18 +67,18 @@ class BooksApp extends React.Component {
 
         <Loader loaded={this.state.finishLoader} />
         <Route exact path='/' render={() => (
-          
+
           <BooksList
             shelfs={this.shelfs}
             books={this.state}
             getBooks={this.getBooks}
             selectShelf={this.selectShelf}
           />
-          )} />
+        )} />
         <Route path='/search' render={() => (
-          <SearchPage selectShelf={this.selectShelf} onShelfs={this.state} setLoader={ () => this.setState( () => ({
+          <SearchPage selectShelf={this.selectShelf} onShelfs={this.state} setLoader={() => this.setState(() => ({
             finishLoader: false
-          }))}  finishLoader={ () => this.setState( () => ({
+          }))} finishLoader={() => this.setState(() => ({
             finishLoader: true
           }))} />
         )} />

@@ -89,16 +89,7 @@ class SearchPage extends Component {
                     </ol>
                 </div>
                 {this.state.error && (
-                    <div style={{
-                        backgroundColor: '#dc3545',
-                        color: '#FFF',
-                        fontFamily: 'Sans-serif',
-                        flex: 1,
-                        justifyContent: 'center',
-                        paddingLeft: '10%',
-                        paddingRight: '10%',
-                        textAlign: 'center'
-                    }}>
+                    <div style={style}>
                         <p> Use only these therms for search a book:  </p>
                         <div className='error'> {this.state.error.map((term) => {
                             return term.concat(', ') //Concat ',' to separate therms
@@ -109,6 +100,17 @@ class SearchPage extends Component {
             </div>
         )
     }
+}
+
+const style = {
+    backgroundColor: '#dc3545',
+    color: '#FFF',
+    fontFamily: 'Sans-serif',
+    flex: 1,
+    justifyContent: 'center',
+    paddingLeft: '10%',
+    paddingRight: '10%',
+    textAlign: 'center'
 }
 
 export default SearchPage
